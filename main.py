@@ -15,9 +15,15 @@ async def handler(websocket):
     except Exception as e:
         print("Disconnected:", e)
 
-# Railway сам даёт порт через переменную окружения
-port = int(os.getenv("PORT", 8080))
-start_server = websockets.serve(handler, "0.0.0.0", port)
+async def main():
+    # Railway сам даёт порт через переменную окружения
+    port = int(os.getenv("PORT", 8080))
+    # Создаём сервер (это объект, не корутина)
+    server = websockets.serve(handler, "0.0.0.0", port)
+    print(f"WebSocket server running on port {port}")
+    # Запускаем сервер как корутину
+    await server
 
-print(f"WebSocket server running on port {port}")
-asyncio.run(start_server)
+if __name__ == "__main__":
+    asyncio.run(main())
+
